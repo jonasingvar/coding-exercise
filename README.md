@@ -5,11 +5,13 @@ saves the event to be sent in the same database as a transaction. Another thread
 
 ## Design Decisions
 
-#### Layout to Support DDD
+### Directory Layout to Support DDD
 
-#### Request Validation
+### Anti Corruption Layers
 
-#### Outbox Pattern
+### Request Validation
+
+### Outbox Pattern
 
 
 
@@ -63,11 +65,12 @@ and retrieves the order through the API
 
 
 
-Goto
+### H2 Database
 
-http://localhost:8080/h2-console
+This runs with an embedded H2 in-memory database. This could easily be changed to a postgres database or similar for
+production.
 
-Enter this In 
-jdbc:h2:mem:jonasingvar
+Goto: http://localhost:8080/h2-console and enter URL: `jdbc:h2:mem:jonasingvar`
+
 
 
