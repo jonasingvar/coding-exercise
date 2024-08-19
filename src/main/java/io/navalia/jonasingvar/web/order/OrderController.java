@@ -1,6 +1,9 @@
 package io.navalia.jonasingvar.web.order;
 
+import io.navalia.jonasingvar.application.dto.OrderDTO;
+import io.navalia.jonasingvar.application.dto.OrderResponseDTO;
 import io.navalia.jonasingvar.domain.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +20,8 @@ public class OrderController {
     private final OrderService service;
 
     @PostMapping
-    public ResponseEntity<String> createOrder(@RequestBody OrderDTO orderDTO) {
-
-        service.process(orderDTO);
-
-        return new ResponseEntity<>("Order created successfully", HttpStatus.CREATED);
+    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
+        return new ResponseEntity<>(service.process(orderDTO), HttpStatus.CREATED);
     }
 }
 

@@ -1,4 +1,4 @@
-package io.navalia.jonasingvar.infrastructure.persistence;
+package io.navalia.jonasingvar.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Data;

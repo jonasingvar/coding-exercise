@@ -1,9 +1,6 @@
-package io.navalia.jonasingvar.infrastructure.persistence;
+package io.navalia.jonasingvar.domain.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +15,12 @@ import java.math.BigDecimal;
 public class ProductEntity {
 
     @Id
-    @Column(name = "id", updatable = false, nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column(name = "product_key", updatable = false, nullable = false)
+    private String productKey;
+
     @Column(nullable = false, length = 500)
     @Getter
     @Setter

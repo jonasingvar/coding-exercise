@@ -1,6 +1,6 @@
-package io.navalia.jonasingvar.domain.repo;
+package io.navalia.jonasingvar.infrastructure.repo;
 
-import io.navalia.jonasingvar.infrastructure.persistence.OrderEntity;
+import io.navalia.jonasingvar.domain.model.OrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
