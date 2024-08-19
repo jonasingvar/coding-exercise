@@ -17,16 +17,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OrderController {
 
-    private final OrderService service;
+  private final OrderService service;
 
-    @PostMapping
-    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) throws JsonProcessingException {
-        return new ResponseEntity<>(service.submit(orderDTO), HttpStatus.CREATED);
-    }
+  @PostMapping
+  public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) throws JsonProcessingException {
+    return new ResponseEntity<>(service.submit(orderDTO), HttpStatus.CREATED);
+  }
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable UUID orderId) {
-        return new ResponseEntity<>(service.getOrderById(orderId), HttpStatus.OK);
-    }
+  @GetMapping("/{orderId}")
+  public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable UUID orderId) {
+    return new ResponseEntity<>(service.getOrderById(orderId), HttpStatus.OK);
+  }
 }
 

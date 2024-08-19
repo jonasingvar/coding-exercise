@@ -23,31 +23,28 @@ import java.util.UUID;
 @Service
 @Validated
 public class OrderService {
-    @PersistenceContext
-    private EntityManager entityManager;
+  private final ObjectMapper objectMapper;
+  @PersistenceContext
+  private EntityManager entityManager;
+  private OrderRepo orderRepo;
 
-    private OrderRepo orderRepo;
+  @Transactional
+  public OrderResponseDTO submit(OrderDTO dto) throws JsonProcessingException {
+    var entity = OrderMapper.INSTANCE.toEntity(dto);
+    entityManager.persist(entity);
 
-    private final ObjectMapper objectMapper;
+    var orderEventDTO = OutboxEventMapper.INSTANCE.toEventDto(entity);
 
-    @Transactional
-    public OrderResponseDTO submit(OrderDTO dto) throws JsonProcessingException {
-        var entity = OrderMapper.INSTANCE.toEntity(dto);
-        entityManager.persist(entity);
+    var outboxEntity = new OutboxEventEntity();
+    outboxEntity.setJson(objectMapper.writeValueAsString(orderEventDTO));
+    outboxEntity.setStatus(OutboxEventEntity.EventStatus.PENDING);
+    entityManager.persist(outboxEntity);
 
-        var orderEventDTO = OutboxEventMapper.INSTANCE.toEventDto(entity);
+    return OrderMapper.INSTANCE.toDTO(entity);
+  }
 
-        var outboxEntity = new OutboxEventEntity();
-        outboxEntity.setJson(objectMapper.writeValueAsString(orderEventDTO));
-        outboxEntity.setStatus(OutboxEventEntity.EventStatus.PENDING);
-        entityManager.persist(outboxEntity);
-
-        return OrderMapper.INSTANCE.toDTO(entity);
-
-    }
-
-    public OrderResponseDTO getOrderById(UUID orderId) {
-        var orderEntity = orderRepo.findById(orderId).orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
-        return OrderMapper.INSTANCE.toDTO(orderEntity);
-    }
+  public OrderResponseDTO getOrderById(UUID orderId) {
+    var orderEntity = orderRepo.findById(orderId).orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
+    return OrderMapper.INSTANCE.toDTO(orderEntity);
+  }
 }

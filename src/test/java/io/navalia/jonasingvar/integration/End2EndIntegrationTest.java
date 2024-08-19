@@ -33,52 +33,52 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 public class End2EndIntegrationTest {
 
-    @LocalServerPort
-    private int port;
+  @LocalServerPort
+  private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+  @Autowired
+  private TestRestTemplate restTemplate;
 
-    private String baseUrl;
+  private String baseUrl;
 
-    @BeforeEach
-    void setUp() {
-        baseUrl = "http://localhost:" + port + "/api/orders";
-    }
+  @BeforeEach
+  void setUp() {
+    baseUrl = "http://localhost:" + port + "/api/orders";
+  }
 
-    @Test
-    void submits_order_and_finds_by_get_request() {
-        var response = submitOrder();
-        verifyOrder(response.getId());
-    }
+  @Test
+  void submits_order_and_finds_by_get_request() {
+    var response = submitOrder();
+    verifyOrder(response.getId());
+  }
 
-    private OrderResponseDTO submitOrder() {
-        var headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-        var request = new HttpEntity<OrderDTO>(TestData.getOrderDTO(), headers);
-        var response = restTemplate.exchange(baseUrl, HttpMethod.POST, request, OrderResponseDTO.class);
-        OrderResponseDTO responseDTO = response.getBody();
+  private OrderResponseDTO submitOrder() {
+    var headers = new HttpHeaders();
+    headers.add("Content-Type", "application/json");
+    var request = new HttpEntity<OrderDTO>(TestData.getOrderDTO(), headers);
+    var response = restTemplate.exchange(baseUrl, HttpMethod.POST, request, OrderResponseDTO.class);
+    OrderResponseDTO responseDTO = response.getBody();
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(responseDTO).isNotNull();
-        assertThat(responseDTO.getId()).isNotNull();
-        return responseDTO;
-    }
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    assertThat(responseDTO).isNotNull();
+    assertThat(responseDTO.getId()).isNotNull();
+    return responseDTO;
+  }
 
-    private void verifyOrder(UUID id) {
-        var getOrderResponse = restTemplate.getForEntity(baseUrl + "/" + id, OrderResponseDTO.class);
-        assertThat(getOrderResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        var body = getOrderResponse.getBody();
-        assertThat(body).isNotNull();
-        assertThat(body.getId()).isEqualTo(id);
-        assertThat(body.getProducts().size()).isEqualTo(2);
+  private void verifyOrder(UUID id) {
+    var getOrderResponse = restTemplate.getForEntity(baseUrl + "/" + id, OrderResponseDTO.class);
+    assertThat(getOrderResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    var body = getOrderResponse.getBody();
+    assertThat(body).isNotNull();
+    assertThat(body.getId()).isEqualTo(id);
+    assertThat(body.getProducts().size()).isEqualTo(2);
 
-        var product = body.getProducts().get(0);
-        var expectedProduct = TestData.getOrderDTO().getProducts().get(0);
+    var product = body.getProducts().get(0);
+    var expectedProduct = TestData.getOrderDTO().getProducts().get(0);
 
-        assertThat(product)
-                .usingRecursiveComparison()
-                .withComparatorForType(BigDecimal::compareTo, BigDecimal.class) // Compares BigDecimal numerically
-                .isEqualTo(expectedProduct);
-    }
+    assertThat(product)
+        .usingRecursiveComparison()
+        .withComparatorForType(BigDecimal::compareTo, BigDecimal.class) // Compares BigDecimal numerically
+        .isEqualTo(expectedProduct);
+  }
 }

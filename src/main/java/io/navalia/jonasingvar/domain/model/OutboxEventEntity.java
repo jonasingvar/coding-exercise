@@ -1,7 +1,6 @@
 package io.navalia.jonasingvar.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,23 +13,23 @@ import java.util.UUID;
 @Data
 public class OutboxEventEntity {
 
-    @Id
-    @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+  @Id
+  @GeneratedValue
+  @UuidGenerator
+  @Column(name = "id", updatable = false, nullable = false)
+  private UUID id;
 
-    @Column(nullable = false, length = 5000)
-    @Getter
-    @Setter
-    private String json;
+  @Column(nullable = false, length = 5000)
+  @Getter
+  @Setter
+  private String json;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private EventStatus status = EventStatus.PENDING;
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private EventStatus status = EventStatus.PENDING;
 
-    public enum EventStatus {
-        PENDING,
-        PROCESSED
-    }
+  public enum EventStatus {
+    PENDING,
+    PROCESSED
+  }
 }

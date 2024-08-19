@@ -17,29 +17,27 @@ import java.util.function.Function;
 @Data
 public class OrderEntity {
 
-    @Id
-    @GeneratedValue
-    @UuidGenerator
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+  @Id
+  @GeneratedValue
+  @UuidGenerator
+  @Column(name = "id", updatable = false, nullable = false)
+  private UUID id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "order_id")
-    @Getter
-    @Setter
-    private List<ProductEntity> products = new ArrayList<>();
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "order_id")
+  @Getter
+  @Setter
+  private List<ProductEntity> products = new ArrayList<>();
 
-    private BigDecimal calculateTotal(Function<ProductEntity, BigDecimal> mapper) {
-        return products.stream()
-                .map(mapper)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
+  private BigDecimal calculateTotal(Function<ProductEntity, BigDecimal> mapper) {
+    return products.stream().map(mapper).reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
 
-    public BigDecimal getTotalGross() {
-        return calculateTotal(ProductEntity::getTotalPrice);
-    }
+  public BigDecimal getTotalGross() {
+    return calculateTotal(ProductEntity::getTotalPrice);
+  }
 
-    public BigDecimal getTotalNet() {
-        return calculateTotal(p -> p.getTotalPrice().subtract(p.getTotalDiscount()));
-    }
+  public BigDecimal getTotalNet() {
+    return calculateTotal(p -> p.getTotalPrice().subtract(p.getTotalDiscount()));
+  }
 }

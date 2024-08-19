@@ -7,6 +7,6 @@ import java.util.UUID;
 
 @Data
 public class OrderEventDTO {
-    private UUID id;
-    private List<OrderEventProductDTO> products;
+  private UUID id;
+  private List<OrderEventProductDTO> products;
 }

@@ -8,9 +8,8 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface OutboxEventMapper {
-    OutboxEventMapper INSTANCE = Mappers.getMapper(OutboxEventMapper.class);
+  OutboxEventMapper INSTANCE = Mappers.getMapper(OutboxEventMapper.class);
 
-    @Mapping(target = "products", source = "products")
-    OrderEventDTO toEventDto(OrderEntity orderDTO);
-
+  @Mapping(target = "products", source = "products")
+  OrderEventDTO toEventDto(OrderEntity orderDTO);
 }

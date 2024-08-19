@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.navalia.jonasingvar.TestData;
 import io.navalia.jonasingvar.application.dto.OrderDTO;
-import io.navalia.jonasingvar.application.dto.ProductDTO;
 import io.navalia.jonasingvar.domain.model.OrderEntity;
 import io.navalia.jonasingvar.domain.model.OutboxEventEntity;
 import io.navalia.jonasingvar.infrastructure.repo.OrderRepo;
@@ -17,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,62 +27,62 @@ import static org.mockito.Mockito.*;
 
 public class OrderServiceTest {
 
-    @Mock
-    private OrderRepo orderRepo;
+  @Mock
+  private OrderRepo orderRepo;
 
-    @Mock
-    private EntityManager entityManager;
+  @Mock
+  private EntityManager entityManager;
 
-    @Mock
-    private ObjectMapper objectMapper;
+  @Mock
+  private ObjectMapper objectMapper;
 
-    @InjectMocks
-    private OrderService orderService;
+  @InjectMocks
+  private OrderService orderService;
 
-    private OrderEntity orderEntity;
-    private UUID orderId = UUID.randomUUID();
+  private OrderEntity orderEntity;
+  private UUID orderId = UUID.randomUUID();
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        orderId = UUID.randomUUID();
-        orderEntity = new OrderEntity();
-        orderEntity.setId(orderId);
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.openMocks(this);
+    orderId = UUID.randomUUID();
+    orderEntity = new OrderEntity();
+    orderEntity.setId(orderId);
 
-        // Simulate generating a UUID
-        doAnswer(invocation -> {
-            Object[] args = invocation.getArguments();
-            OrderEntity entity = (OrderEntity) args[0];
-            entity.setId(orderId);
-            return null;
-        }).when(entityManager).persist(any(OrderEntity.class));
-    }
+    // Simulate generating a UUID
+    doAnswer(invocation -> {
+      Object[] args = invocation.getArguments();
+      OrderEntity entity = (OrderEntity) args[0];
+      entity.setId(orderId);
+      return null;
+    }).when(entityManager).persist(any(OrderEntity.class));
+  }
 
-    @Test
-    void finds_order() {
-        when(orderRepo.findById(orderId)).thenReturn(Optional.of(orderEntity));
-        assertEquals(orderId, orderService.getOrderById(orderId).getId());
-    }
+  @Test
+  void finds_order() {
+    when(orderRepo.findById(orderId)).thenReturn(Optional.of(orderEntity));
+    assertEquals(orderId, orderService.getOrderById(orderId).getId());
+  }
 
-    @Test
-    void order_not_found() {
-        when(orderRepo.findById(orderId)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> orderService.getOrderById(orderId));
-    }
+  @Test
+  void order_not_found() {
+    when(orderRepo.findById(orderId)).thenReturn(Optional.empty());
+    assertThrows(NotFoundException.class, () -> orderService.getOrderById(orderId));
+  }
 
-    @Test
-    void submits_order() throws JsonProcessingException {
-        OrderDTO dto = TestData.getOrderDTO();
-        var response = orderService.submit(dto);
+  @Test
+  void submits_order() throws JsonProcessingException {
+    OrderDTO dto = TestData.getOrderDTO();
+    var response = orderService.submit(dto);
 
-        assertThat(response.getTotalGross()).isEqualByComparingTo(new BigDecimal(227));
-        assertThat(response.getTotalNet()).isEqualByComparingTo(new BigDecimal(207));
+    assertThat(response.getTotalGross()).isEqualByComparingTo(new BigDecimal(227));
+    assertThat(response.getTotalNet()).isEqualByComparingTo(new BigDecimal(207));
 
-        assertThat(response.getProducts().size()).isEqualTo(2);
+    assertThat(response.getProducts().size()).isEqualTo(2);
 
-        verify(entityManager).persist(argThat(order -> order instanceof OrderEntity && ((OrderEntity) order).getId().equals(orderId)));
-        verify(entityManager).persist(argThat(outbox -> outbox instanceof OutboxEventEntity && ((OutboxEventEntity) outbox).getStatus() == OutboxEventEntity.EventStatus.PENDING));
-    }
+    verify(entityManager).persist(argThat(order -> order instanceof OrderEntity && ((OrderEntity) order).getId().equals(orderId)));
+    verify(entityManager).persist(argThat(outbox -> outbox instanceof OutboxEventEntity && ((OutboxEventEntity) outbox).getStatus() == OutboxEventEntity.EventStatus.PENDING));
+  }
 }
 
 

@@ -10,12 +10,11 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(uses = ProductMapper.class)
 public interface OrderMapper {
+  OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
 
-    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
+  @Mapping(target = "products", source = "products")
+  OrderEntity toEntity(OrderDTO orderDTO);
 
-    @Mapping(target = "products", source = "products")
-    OrderEntity toEntity(OrderDTO orderDTO);
-
-    @Mapping(target = "products", source = "products")
-    OrderResponseDTO toDTO(OrderEntity orderEntity);
+  @Mapping(target = "products", source = "products")
+  OrderResponseDTO toDTO(OrderEntity orderEntity);
 }
