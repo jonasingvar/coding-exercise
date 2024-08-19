@@ -13,6 +13,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -28,6 +30,8 @@ public class OrderService {
   private EntityManager entityManager;
   private OrderRepo orderRepo;
 
+  private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+
   @Transactional
   public OrderResponseDTO submit(OrderDTO dto) throws JsonProcessingException {
     var entity = OrderMapper.INSTANCE.toEntity(dto);
@@ -39,6 +43,8 @@ public class OrderService {
     outboxEntity.setJson(objectMapper.writeValueAsString(orderEventDTO));
     outboxEntity.setStatus(OutboxEventEntity.EventStatus.PENDING);
     entityManager.persist(outboxEntity);
+
+    logger.info("Order submitted {}", dto);
 
     return OrderMapper.INSTANCE.toDTO(entity);
   }

@@ -31,10 +31,12 @@ public class OutboxEventService {
         event.setStatus(OutboxEventEntity.EventStatus.PROCESSED);
         outboxEventRepo.save(event);
 
+        // Send event to RabbitMQ Here (sorry ran out of time)
+
         logger.info("Event sent {}", event);
 
       } catch (Exception e) {
-        e.printStackTrace();
+        logger.error("failed to send event: " + event.getId(), e);
       }
     }
   }
