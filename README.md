@@ -68,7 +68,7 @@ Will print out this response
       "quantity": 3,
       "price": 34.99,
       "discount": 0,
-      "name": "Fjallraven Backpack"
+      "name": "Fjallraven Hat"
     }
   ],
   "totalGross": 404.95,
@@ -98,6 +98,7 @@ production.
 
 Goto: http://localhost:8080/h2-console and enter URL: `jdbc:h2:mem:jonasingvar`
 
+![SQL Tables](./sql_tables.png)
 
 ## Future Improvements
 
