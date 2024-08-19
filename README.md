@@ -20,6 +20,10 @@ The Order DTO, database entity, and outgoing event are intentionally separated t
 I use Bean Validation annotations (@Min, @NotNull, etc.) for request validation to enforce data integrity and consistency.
 I mapped different exceptions to correct HTTP response code (NotFoundException => 404 for example).
 
+### Auto Mapper
+
+I used `mapstruct` to automate most the mappings various DTOs and entities.
+
 ### Outbox Pattern
 
 The order is first saved to the `ORDERS` and `PRODUCTS` tables. Then an event is created and stores as JSON in table `OUTBOX_EVENT`.
