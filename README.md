@@ -115,3 +115,4 @@ Because I tried to limit this to 4-5 hours, I had to skip a few things.
 - If I had more time I would have done docker-compose with `postgres` and `rabbitmq` and have a docker file for the app.
 - Although code coverage is high, it could use a few more tests around some edge cases
 - More logging
+- Github actions that builds and runs test on every checkin
