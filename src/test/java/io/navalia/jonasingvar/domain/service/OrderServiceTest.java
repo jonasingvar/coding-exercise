@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+
 public class OrderServiceTest {
 
   @Mock
@@ -40,7 +41,7 @@ public class OrderServiceTest {
   private OrderService orderService;
 
   private OrderEntity orderEntity;
-  private UUID orderId = UUID.randomUUID();
+  private UUID orderId;
 
   @BeforeEach
   void setUp() {
