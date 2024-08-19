@@ -49,7 +49,7 @@ and retrieves the order through the API
 ```
 
 
-### Run manual script
+### Send a Sample Order
 
 ```bash
  ./send_request.sh
@@ -79,6 +79,9 @@ Will print out this response
   "totalNet": 394.95
 }
 ```
+
+### Send an Invalid Order
+
 ```bash
  ./send_bad_request.sh
 ```
