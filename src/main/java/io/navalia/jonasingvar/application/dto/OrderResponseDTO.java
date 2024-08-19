@@ -1,15 +1,18 @@
 package io.navalia.jonasingvar.application.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
-@AllArgsConstructor
+@Data
+@Builder
 public class OrderResponseDTO {
-
-    public UUID id;
-
-    public BigDecimal totalGross;
-    public BigDecimal totalNet;
+    private UUID id;
+    private List<ProductDTO> products;
+    private BigDecimal totalGross;
+    private BigDecimal totalNet;
 }

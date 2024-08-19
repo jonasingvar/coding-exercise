@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Entity
 @Table(name = "orders")
@@ -28,15 +29,17 @@ public class OrderEntity {
     @Setter
     private List<ProductEntity> products = new ArrayList<>();
 
-    public BigDecimal getTotalGross() {
+    private BigDecimal calculateTotal(Function<ProductEntity, BigDecimal> mapper) {
         return products.stream()
-                .map(ProductEntity::getTotalPrice)
+                .map(mapper)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public BigDecimal getTotalGross() {
+        return calculateTotal(ProductEntity::getTotalPrice);
+    }
+
     public BigDecimal getTotalNet() {
-        return products.stream()
-                .map(p -> p.getTotalPrice().min(p.getTotalDiscount()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return calculateTotal(p -> p.getTotalPrice().subtract(p.getTotalDiscount()));
     }
 }
